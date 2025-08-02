@@ -75,9 +75,9 @@ unsigned char __1_chip8_logo_ch8[] ={
 unsigned int chip8_logo_ch8_len = 761;
 
 Chip8::Chip8() {
-	ssd1306_Init();
-	ssd1306_Fill(Black);
-	ssd1306_UpdateScreen();
+	// ssd1306_Init();
+	// ssd1306_Fill(Black);
+	// ssd1306_UpdateScreen();
   for (int i{FONT_START_ADDR}; i <= FONT_END_ADDR; i++) {
     memory[i] = fontset[i - FONT_START_ADDR];
   }
@@ -90,7 +90,7 @@ int Chip8::run() {
 	while (1) {
 		fetch();
 		decode();
-    chip8_interface.draw_display();
+    //  chip8_interface.draw_display();
 	}
 }
 
@@ -479,3 +479,4 @@ void Chip8::print_debug() const {
 }
 */
 // https://github.com/Timendus/chip8-test-suite?tab=readme-ov-file#chip-8-splash-screen
+// https://wiki.st.com/stm32mcu/wiki/Getting_started_with_TIM#What_is_a_timer_-28TIM-29--
