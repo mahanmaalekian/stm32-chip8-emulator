@@ -1,80 +1,131 @@
 #include "Chip8.h"
-#include <chrono>
-#include <cstdlib>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
+#include "ssd1306.h"
+#include "ssd1306_tests.h"
+
+unsigned char __1_chip8_logo_ch8[] = {
+  0x00, 0xe0, 0x61, 0x01, 0x60, 0x08, 0xa2, 0x50, 0xd0, 0x1f, 0x60, 0x10,
+  0xa2, 0x5f, 0xd0, 0x1f, 0x60, 0x18, 0xa2, 0x6e, 0xd0, 0x1f, 0x60, 0x20,
+  0xa2, 0x7d, 0xd0, 0x1f, 0x60, 0x28, 0xa2, 0x8c, 0xd0, 0x1f, 0x60, 0x30,
+  0xa2, 0x9b, 0xd0, 0x1f, 0x61, 0x10, 0x60, 0x08, 0xa2, 0xaa, 0xd0, 0x1f,
+  0x60, 0x10, 0xa2, 0xb9, 0xd0, 0x1f, 0x60, 0x18, 0xa2, 0xc8, 0xd0, 0x1f,
+  0x60, 0x20, 0xa2, 0xd7, 0xd0, 0x1f, 0x60, 0x28, 0xa2, 0xe6, 0xd0, 0x1f,
+  0x60, 0x30, 0xa2, 0xf5, 0xd0, 0x1f, 0x12, 0x4e, 0x0f, 0x02, 0x02, 0x02,
+  0x02, 0x02, 0x00, 0x00, 0x1f, 0x3f, 0x71, 0xe0, 0xe5, 0xe0, 0xe8, 0xa0,
+  0x0d, 0x2a, 0x28, 0x28, 0x28, 0x00, 0x00, 0x18, 0xb8, 0xb8, 0x38, 0x38,
+  0x3f, 0xbf, 0x00, 0x19, 0xa5, 0xbd, 0xa1, 0x9d, 0x00, 0x00, 0x0c, 0x1d,
+  0x1d, 0x01, 0x0d, 0x1d, 0x9d, 0x01, 0xc7, 0x29, 0x29, 0x29, 0x27, 0x00,
+  0x00, 0xf8, 0xfc, 0xce, 0xc6, 0xc6, 0xc6, 0xc6, 0x00, 0x49, 0x4a, 0x49,
+  0x48, 0x3b, 0x00, 0x00, 0x00, 0x01, 0x03, 0x03, 0x03, 0x01, 0xf0, 0x30,
+  0x90, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0xfe, 0xc7, 0x83, 0x83, 0x83,
+  0xc6, 0xfc, 0xe7, 0xe0, 0xe0, 0xe0, 0xe0, 0x71, 0x3f, 0x1f, 0x00, 0x00,
+  0x07, 0x02, 0x02, 0x02, 0x02, 0x39, 0x38, 0x38, 0x38, 0x38, 0xb8, 0xb8,
+  0x38, 0x00, 0x00, 0x31, 0x4a, 0x79, 0x40, 0x3b, 0xdd, 0xdd, 0xdd, 0xdd,
+  0xdd, 0xdd, 0xdd, 0xdd, 0x00, 0x00, 0xa0, 0x38, 0x20, 0xa0, 0x18, 0xce,
+  0xfc, 0xf8, 0xc0, 0xd4, 0xdc, 0xc4, 0xc5, 0x00, 0x00, 0x30, 0x44, 0x24,
+  0x14, 0x63, 0xf1, 0x03, 0x07, 0x07, 0x77, 0x17, 0x63, 0x71, 0x00, 0x00,
+  0x28, 0x8e, 0xa8, 0xa8, 0xa6, 0xce, 0x87, 0x03, 0x03, 0x03, 0x87, 0xfe,
+  0xfc, 0x00, 0x00, 0x60, 0x90, 0xf0, 0x80, 0x70
+};
+unsigned int chip8_logo_ch8_len = 260;
 
 Chip8::Chip8() {
+	ssd1306_Init();
+	ssd1306_Fill(Black);
+	ssd1306_UpdateScreen();
   for (int i{FONT_START_ADDR}; i <= FONT_END_ADDR; i++) {
     memory[i] = fontset[i - FONT_START_ADDR];
   }
+  for (unsigned int i{0}; i < chip8_logo_ch8_len; i++) {
+	  memory[i + 0x200] = __1_chip8_logo_ch8[i];
+  }
 }
 
-int Chip8::run(int argc, char **argv) {
-  if (argc < 2) {
-    std::cout << "Usage: emu <rom_file>\n";
-    return -1;
-  }
-  if (0 != load_rom(argv[1])) {
-    std::cout << "Cannot load rom file\n";
-    return -1;
-  }
-  bool quit = false;
-  auto start_time_cycle = std::chrono::high_resolution_clock::now();
+int Chip8::run() {
 
-  auto start_time_timer = std::chrono::high_resolution_clock::now();
+	while (1) {
+		fetch();
+		decode();
+	    for (int y{0}; y < Chip8Interface::DISPLAY_HEIGHT; ++y){
+	        for (int x{0}; x < Chip8Interface::DISPLAY_WIDTH; ++x)
+	        {
+	            bool pixel = chip8_interface.display_arr[y][x];
+	            if (pixel) {
+	            	ssd1306_DrawPixel(x, y, White);
+	            }
+	            else {
+	            	ssd1306_DrawPixel(x, y, Black);
+	            }
+	        }
+	    }
+	    ssd1306_UpdateScreen();
 
-  while (!quit) {
-    quit = chip8_interface.process_input();
-    auto current_time_cycle = std::chrono::high_resolution_clock::now();
-    float elapsed_cycle =
-        std::chrono::duration<float, std::chrono::milliseconds::period>(
-            current_time_cycle - start_time_cycle)
-            .count();
-    if (elapsed_cycle > cycle_delay) {
-      fetch();
-      decode();
-      start_time_cycle = current_time_cycle;
-    }
-
-    auto current_time_timer = std::chrono::high_resolution_clock::now();
-    float elapsed_timer =
-        std::chrono::duration<float, std::chrono::milliseconds::period>(
-            current_time_timer - start_time_timer)
-            .count();
-
-    if (elapsed_timer > timer_delay) {
-      chip8_interface.draw_display();
-
-      if (delay_timer > 0)
-        delay_timer--;
-      if (sound_timer > 0) {
-        sound_timer--;
-        chip8_interface.beep();
-      }
-      start_time_timer = current_time_timer;
-    }
-  }
-  return 0;
+	}
 }
 
-int Chip8::load_rom(char *file_name) {
-  std::ifstream file(file_name, std::ios::binary |
-                                    std::ios::ate); // open at end to get size
-  if (file.is_open()) {
-    std::streamsize romSize = file.tellg();
-    file.seekg(0, std::ios::beg);
-    if (romSize > 4096 - 0x200) {
-      return -1;
-    }
-    file.read(reinterpret_cast<char *>(memory + 0x200), romSize);
-    file.close();
-  } else {
-    return -1;
-  }
-  return 0;
-}
+//int Chip8::run(int argc, char **argv) {
+//  if (argc < 2) {
+//    std::cout << "Usage: emu <rom_file>\n";
+//    return -1;
+//  }
+//  if (0 != load_rom(argv[1])) {
+//    std::cout << "Cannot load rom file\n";
+//    return -1;
+//  }
+//  bool quit = false;
+//  auto start_time_cycle = std::chrono::high_resolution_clock::now();
+//
+//  auto start_time_timer = std::chrono::high_resolution_clock::now();
+//
+//  while (!quit) {
+//    quit = chip8_interface.process_input();
+//    auto current_time_cycle = std::chrono::high_resolution_clock::now();
+//    float elapsed_cycle =
+//        std::chrono::duration<float, std::chrono::milliseconds::period>(
+//            current_time_cycle - start_time_cycle)
+//            .count();
+//    if (elapsed_cycle > cycle_delay) {
+//      fetch();
+//      decode();
+//      start_time_cycle = current_time_cycle;
+//    }
+//
+//    auto current_time_timer = std::chrono::high_resolution_clock::now();
+//    float elapsed_timer =
+//        std::chrono::duration<float, std::chrono::milliseconds::period>(
+//            current_time_timer - start_time_timer)
+//            .count();
+//
+//    if (elapsed_timer > timer_delay) {
+//      chip8_interface.draw_display();
+//
+//      if (delay_timer > 0)
+//        delay_timer--;
+//      if (sound_timer > 0) {
+//        sound_timer--;
+//        chip8_interface.beep();
+//      }
+//      start_time_timer = current_time_timer;
+//    }
+//  }
+//  return 0;
+//}
+
+//int Chip8::load_rom(char *file_name) {
+//  std::ifstream file(file_name, std::ios::binary |
+//                                    std::ios::ate); // open at end to get size
+//  if (file.is_open()) {
+//    std::streamsize romSize = file.tellg();
+//    file.seekg(0, std::ios::beg);
+//    if (romSize > 4096 - 0x200) {
+//      return -1;
+//    }
+//    file.read(reinterpret_cast<char *>(memory + 0x200), romSize);
+//    file.close();
+//  } else {
+//    return -1;
+//  }
+//  return 0;
+//}
 
 void Chip8::init() {}
 
@@ -158,9 +209,6 @@ void Chip8::execute0(instruction_parts instr_parts) {
   case 0xE:
     sp--;
     pc = stack[sp];
-    break;
-  default:
-    NO_IMPL
     break;
   }
 }
@@ -256,9 +304,9 @@ void Chip8::executeB(instruction_parts instr_parts) {
 }
 
 void Chip8::executeC(instruction_parts instr_parts) {
-  uint8_t random = rand() % 256;
-  random &= instr_parts.nn;
-  variable_registers[instr_parts.x] = random;
+//  uint8_t random = rand() % 256;
+//  random &= instr_parts.nn;
+//  variable_registers[instr_parts.x] = random;
 }
 
 void Chip8::executeD(instruction_parts instr_parts) {
@@ -288,14 +336,14 @@ void Chip8::executeD(instruction_parts instr_parts) {
 }
 
 void Chip8::executeE(instruction_parts instr_parts) {
-  for (int i = 0; i <= 0xF; i++) {
-    std::cout << chip8_interface.keys[i] << " ";
-  }
-  std::cout << "\n";
+//  for (int i = 0; i <= 0xF; i++) {
+//    std::cout << chip8_interface.keys[i] << " ";
+//  }
+//  std::cout << "\n";
   switch (instr_parts.nn) {
   case 0x9E:
     if (chip8_interface.keys[variable_registers[instr_parts.x]]) {
-      std::cout << "IT IS PRESSED\n";
+//      std::cout << "IT IS PRESSED\n";
       pc += 2;
     }
     break;
@@ -362,38 +410,38 @@ void Chip8::executeF(instruction_parts instr_parts) {
   }
 }
 
-void Chip8::print_video_buffer() {
-  for (int y = 0; y < Chip8Interface::DISPLAY_HEIGHT; ++y) {
-    for (int x = 0; x < Chip8Interface::DISPLAY_WIDTH; ++x) {
-      uint32_t pixel = chip8_interface.display_arr[y][x];
-      if (pixel == true) {
-        std::cout << "#"; // white pixel
-      } else {
-        std::cout << " "; // black pixel
-      }
-    }
-    std::cout << "\n";
-  }
-}
-
-void Chip8::print_debug() const {
-  std::cout << std::hex << std::uppercase;
-
-  std::cout << "==== CHIP-8 DEBUG STATE ====\n";
-  std::cout << "INSTR: 0x" << std::setw(4) << std::setfill('0')
-            << curr_instruction << "\n";
-
-  for (int i = 0; i < 16; ++i) {
-    std::cout << "V" << std::hex << i << ": " << std::setw(2)
-              << std::setfill('0') << static_cast<int>(variable_registers[i])
-              << "  ";
-    if ((i + 1) % 4 == 0)
-      std::cout << "\n";
-  }
-
-  std::cout << " I: 0x" << std::setw(4) << std::setfill('0') << index_register
-            << "\n";
-  std::cout << "PC: 0x" << std::setw(4) << std::setfill('0') << pc << "\n";
-  std::cout << "============================\n";
-}
+//void Chip8::print_video_buffer() {
+//  for (int y = 0; y < Chip8Interface::DISPLAY_HEIGHT; ++y) {
+//    for (int x = 0; x < Chip8Interface::DISPLAY_WIDTH; ++x) {
+//      uint32_t pixel = chip8_interface.display_arr[y][x];
+//      if (pixel == true) {
+//        std::cout << "#"; // white pixel
+//      } else {
+//        std::cout << " "; // black pixel
+//      }
+//    }
+//    std::cout << "\n";
+//  }
+//}
+//
+//void Chip8::print_debug() const {
+//  std::cout << std::hex << std::uppercase;
+//
+//  std::cout << "==== CHIP-8 DEBUG STATE ====\n";
+//  std::cout << "INSTR: 0x" << std::setw(4) << std::setfill('0')
+//            << curr_instruction << "\n";
+//
+//  for (int i = 0; i < 16; ++i) {
+//    std::cout << "V" << std::hex << i << ": " << std::setw(2)
+//              << std::setfill('0') << static_cast<int>(variable_registers[i])
+//              << "  ";
+//    if ((i + 1) % 4 == 0)
+//      std::cout << "\n";
+//  }
+//
+//  std::cout << " I: 0x" << std::setw(4) << std::setfill('0') << index_register
+//            << "\n";
+//  std::cout << "PC: 0x" << std::setw(4) << std::setfill('0') << pc << "\n";
+//  std::cout << "============================\n";
+//}
 // https://github.com/Timendus/chip8-test-suite?tab=readme-ov-file#chip-8-splash-screen

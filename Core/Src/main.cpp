@@ -21,8 +21,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+extern "C" {
 #include "ssd1306.h"
 #include "ssd1306_tests.h"
+}
+#include "Chip8.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,7 +75,11 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+uint8_t x = 1;
+x = 2;
+if (x ==2) {
+	x = 1;
+}
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -95,7 +103,10 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-//  ssd1306_Init();
+  ssd1306_Init();
+Chip8 chip = Chip8();
+  chip.run();
+
 
   /* USER CODE END 2 */
 

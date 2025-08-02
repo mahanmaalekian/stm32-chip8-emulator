@@ -50,7 +50,7 @@ class Chip8 {
 
 
         Chip8();
-        int run(int argc, char **argv);
+        int run();
         void init();
         int load_rom(char* file);
         void fetch();
@@ -71,10 +71,11 @@ class Chip8 {
         void executeD(instruction_parts instr_parts);
         void executeE(instruction_parts instr_parts);
         void executeF(instruction_parts instr_parts);
+        void display();
     private:
         void print_debug() const;
         void print_video_buffer();
 
 };
-#define NO_IMPL { std::cerr <<"NOT YET IMPLEMENTED\n"; exit(-2); }
+//#define NO_IMPL { std::cerr <<"NOT YET IMPLEMENTED\n"; exit(-2); }
 #endif
