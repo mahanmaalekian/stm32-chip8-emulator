@@ -9,7 +9,7 @@ class Chip8Interface {
         bool keys[16]{false};
 
         Chip8Interface();
-        void draw_display(); 
+        void draw_display();
         bool process_input();
         void beep();
 };

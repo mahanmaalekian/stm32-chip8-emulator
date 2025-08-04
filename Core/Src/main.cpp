@@ -112,13 +112,9 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
-   HAL_TIM_Base_Start_IT(&htim2);
-   HAL_TIM_Base_Start_IT(&htim3);
+  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start_IT(&htim3);
   ssd1306_Init();
- ssd1306_Fill(White);
- ssd1306_UpdateScreen();
-  // Chip8 chip = Chip8();
-  //  chip.run();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -423,20 +419,17 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-  if (htim->Instance == TIM1)
-  {
+  if(htim->Instance == TIM1){
 	chip.chip8_interface.draw_display();
-
-  }
-  else if(htim->Instance == TIM2) {
-  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    if (chip.delay_timer > 0)
-       chip.delay_timer--;
-   if (chip.sound_timer > 0) {
-       chip.sound_timer--;
-       chip.chip8_interface.beep();
-     }
-
+	}
+	else if(htim->Instance == TIM2) {
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+		if (chip.delay_timer > 0)
+		chip.delay_timer--;
+		if (chip.sound_timer > 0) {
+		chip.sound_timer--;
+		chip.chip8_interface.beep();
+	}
   } else if (htim->Instance == TIM3) {
     chip.fetch();
     chip.decode();
