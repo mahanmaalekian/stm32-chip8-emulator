@@ -50,9 +50,6 @@ class Chip8 {
 
 
         Chip8();
-        int run();
-        void init();
-        int load_rom(char* file);
         void fetch();
         void decode();
         void execute0(instruction_parts instr_parts);

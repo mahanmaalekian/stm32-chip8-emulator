@@ -6,23 +6,12 @@
 // TODO: add input via UART
 
 Chip8::Chip8() {
-	// ssd1306_Init();
-	// ssd1306_Fill(Black);
-	// ssd1306_UpdateScreen();
   for (int i{FONT_START_ADDR}; i <= FONT_END_ADDR; i++) {
     memory[i] = fontset[i - FONT_START_ADDR];
   }
   for (unsigned int i{0}; i < chip8_logo_ch8_len; i++) {
 	  memory[i + 0x200] = __1_chip8_logo_ch8[i];
   }
-}
-
-int Chip8::run() {
-	while (1) {
-      // fetch();
-      // decode();
-    //  chip8_interface.draw_display();
-	}
 }
 
 //int Chip8::run(int argc, char **argv) {
@@ -89,8 +78,6 @@ int Chip8::run() {
 //  }
 //  return 0;
 //}
-
-void Chip8::init() {}
 
 void Chip8::fetch() {
   uint8_t hi = memory[pc];
