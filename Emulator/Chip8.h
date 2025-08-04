@@ -77,5 +77,4 @@ class Chip8 {
         void print_video_buffer();
 
 };
-//#define NO_IMPL { std::cerr <<"NOT YET IMPLEMENTED\n"; exit(-2); }
 #endif

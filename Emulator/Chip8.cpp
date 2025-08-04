@@ -2,8 +2,7 @@
 #include "ssd1306.h"
 #include "ssd1306_tests.h"
 #include "roms.h"
-// TODO: add a header file for roms
-// TODO: use a timer for screen update
+#include <stdlib.h>
 // TODO: add input via UART
 
 Chip8::Chip8() {
@@ -268,9 +267,9 @@ void Chip8::executeB(instruction_parts instr_parts) {
 }
 
 void Chip8::executeC(instruction_parts instr_parts) {
-//  uint8_t random = rand() % 256;
-//  random &= instr_parts.nn;
-//  variable_registers[instr_parts.x] = random;
+  uint8_t random = rand() % 256;
+  random &= instr_parts.nn;
+  variable_registers[instr_parts.x] = random;
 }
 
 void Chip8::executeD(instruction_parts instr_parts) {
