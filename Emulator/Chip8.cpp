@@ -13,71 +13,72 @@ Chip8::Chip8() {
 	  memory[i + 0x200] = __1_chip8_logo_ch8[i];
   }
 }
+/*
+int Chip8::run(int argc, char **argv) {
+  if (argc < 2) {
+    std::cout << "Usage: emu <rom_file>\n";
+    return -1;
+  }
+  if (0 != load_rom(argv[1])) {
+    std::cout << "Cannot load rom file\n";
+    return -1;
+  }
+  bool quit = false;
+  auto start_time_cycle = std::chrono::high_resolution_clock::now();
 
-//int Chip8::run(int argc, char **argv) {
-//  if (argc < 2) {
-//    std::cout << "Usage: emu <rom_file>\n";
-//    return -1;
-//  }
-//  if (0 != load_rom(argv[1])) {
-//    std::cout << "Cannot load rom file\n";
-//    return -1;
-//  }
-//  bool quit = false;
-//  auto start_time_cycle = std::chrono::high_resolution_clock::now();
-//
-//  auto start_time_timer = std::chrono::high_resolution_clock::now();
-//
-//  while (!quit) {
-//    quit = chip8_interface.process_input();
-//    auto current_time_cycle = std::chrono::high_resolution_clock::now();
-//    float elapsed_cycle =
-//        std::chrono::duration<float, std::chrono::milliseconds::period>(
-//            current_time_cycle - start_time_cycle)
-//            .count();
-//    if (elapsed_cycle > cycle_delay) {
-//      fetch();
-//      decode();
-//      start_time_cycle = current_time_cycle;
-//    }
-//
-//    auto current_time_timer = std::chrono::high_resolution_clock::now();
-//    float elapsed_timer =
-//        std::chrono::duration<float, std::chrono::milliseconds::period>(
-//            current_time_timer - start_time_timer)
-//            .count();
-//
-//    if (elapsed_timer > timer_delay) {
-//      chip8_interface.draw_display();
-//
-//      if (delay_timer > 0)
-//        delay_timer--;
-//      if (sound_timer > 0) {
-//        sound_timer--;
-//        chip8_interface.beep();
-//      }
-//      start_time_timer = current_time_timer;
-//    }
-//  }
-//  return 0;
-//}
+  auto start_time_timer = std::chrono::high_resolution_clock::now();
 
-//int Chip8::load_rom(char *file_name) {
-//  std::ifstream file(file_name, std::ios::binary |
-//                                    std::ios::ate); // open at end to get size
-//  if (file.is_open()) {
-//    std::streamsize romSize = file.tellg();
-//    file.seekg(0, std::ios::beg);
-//    if (romSize > 4096 - 0x200) {
-//      return -1;
-//    }
-//    file.read(reinterpret_cast<char *>(memory + 0x200), romSize);
-//    file.close();
-//  } else {
-//    return -1;
-//  }
-//  return 0;
-//}
+  while (!quit) {
+    quit = chip8_interface.process_input();
+    auto current_time_cycle = std::chrono::high_resolution_clock::now();
+    float elapsed_cycle =
+        std::chrono::duration<float, std::chrono::milliseconds::period>(
+            current_time_cycle - start_time_cycle)
+            .count();
+    if (elapsed_cycle > cycle_delay) {
+      fetch();
+      decode();
+      start_time_cycle = current_time_cycle;
+    }
+
+    auto current_time_timer = std::chrono::high_resolution_clock::now();
+    float elapsed_timer =
+        std::chrono::duration<float, std::chrono::milliseconds::period>(
+            current_time_timer - start_time_timer)
+            .count();
+
+    if (elapsed_timer > timer_delay) {
+      chip8_interface.draw_display();
+
+      if (delay_timer > 0)
+        delay_timer--;
+      if (sound_timer > 0) {
+        sound_timer--;
+        chip8_interface.beep();
+      }
+      start_time_timer = current_time_timer;
+    }
+  }
+  return 0;
+}
+
+int Chip8::load_rom(char *file_name) {
+  std::ifstream file(file_name, std::ios::binary |
+                                    std::ios::ate); // open at end to get size
+  if (file.is_open()) {
+    std::streamsize romSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+    if (romSize > 4096 - 0x200) {
+      return -1;
+    }
+    file.read(reinterpret_cast<char *>(memory + 0x200), romSize);
+    file.close();
+  } else {
+    return -1;
+  }
+  return 0;
+}
+*/
 
 void Chip8::fetch() {
   uint8_t hi = memory[pc];
