@@ -88,8 +88,8 @@ Chip8::Chip8() {
 
 int Chip8::run() {
 	while (1) {
-		fetch();
-		decode();
+      // fetch();
+      // decode();
     //  chip8_interface.draw_display();
 	}
 }
