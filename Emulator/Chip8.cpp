@@ -10,7 +10,7 @@ Chip8::Chip8() {
     memory[i] = fontset[i - FONT_START_ADDR];
   }
   for (unsigned int i{0}; i < chip8_logo_ch8_len; i++) {
-	  memory[i + 0x200] = __1_chip8_logo_ch8[i];
+	  memory[i + 0x200] = chip8_logo_ch8[i];
   }
 }
 /*
@@ -293,16 +293,21 @@ void Chip8::executeE(instruction_parts instr_parts) {
 //  std::cout << "\n";
   switch (instr_parts.nn) {
   case 0x9E:
+	chip8_interface.process_input();
     if (chip8_interface.keys[variable_registers[instr_parts.x]]) {
 //      std::cout << "IT IS PRESSED\n";
       pc += 2;
     }
     break;
   case 0xA1:
+	chip8_interface.process_input();
     if (!chip8_interface.keys[variable_registers[instr_parts.x]]) {
       pc += 2;
     }
     break;
+  }
+  for (int i{0}; i < 16; i++) {
+	  chip8_interface.keys[i] = false;
   }
 }
 
@@ -313,16 +318,21 @@ void Chip8::executeF(instruction_parts instr_parts) {
     break;
   case 0x0A: {
     bool is_pressed = false;
+    chip8_interface.process_input();
     for (int i{0}; i <= 0xF; ++i) {
       if (true == chip8_interface.keys[i]) {
         variable_registers[instr_parts.x] = i;
-        // while (!chip8_interface.process_input() && true == chip8_interface.keys[i]);
         is_pressed = true;
         break;
       }
     }
     if (!is_pressed)
       pc -= 2;
+    else {
+    	for (int i{0}; i < 16; i++){
+    		chip8_interface.keys[i] = false;
+    	}
+    }
     break;
   }
   case 0x15:

@@ -24,8 +24,12 @@
 extern "C" {
 #include "ssd1306.h"
 #include "ssd1306_tests.h"
+#include "keypad.h"
+
 }
 #include "Chip8.h"
+#include <chrono>
+#include <thread>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -84,6 +88,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+    char key;
 
   /* USER CODE END 1 */
 
@@ -115,14 +120,29 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_Base_Start_IT(&htim3);
   ssd1306_Init();
+  keypad_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  // bool color = false;
   while (1)
   {
-    /* USER CODE END WHILE */
-
+		// key=keypad_read();
+		// if(key)
+		// {
+		// 	if (color) {
+		// 		color = false;
+		// 		ssd1306_Fill(Black);
+		// 	}
+		// 	else {
+		// 		color = true;
+		// 		ssd1306_Fill(White);
+		// 	}
+		// }
+		// ssd1306_UpdateScreen();
+		// HAL_Delay(100);
+	    /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

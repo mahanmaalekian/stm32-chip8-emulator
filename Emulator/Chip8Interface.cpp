@@ -1,5 +1,9 @@
 #include "Chip8Interface.h"
 #include "ssd1306.h"
+extern "C" {
+#include "keypad.h"
+
+}
 Chip8Interface::Chip8Interface() {
 }
 
@@ -28,6 +32,57 @@ void Chip8Interface::draw_display() {
 }
 
 bool Chip8Interface::process_input() {
+	char key = keypad_read();
+     switch(key) {
+        case '1':
+            keys[1] = true;
+            break;
+        case '2':
+            keys[2] = true;
+            break;
+        case '3':
+            keys[3] = true;
+            break;
+        case '4':
+            keys[4] = true;
+            break;
+        case '5':
+            keys[5] = true;
+            break;
+        case '6':
+            keys[6] = true;
+            break;
+        case '7':
+            keys[7] = true;
+            break;
+        case '8':
+            keys[8] = true;
+            break;
+        case '9':
+            keys[9] = true;
+            break;
+        case '0':
+            keys[0] = true;
+            break;
+        case '*':
+            keys[0xA] = true;
+            break;
+        case '#':
+            keys[0xB] = true;
+            break;
+        case 'A':
+            keys[0xC] = true;
+            break;
+        case 'B':
+            keys[0xD] = true;
+            break;
+        case 'C':
+            keys[0xE] = true;
+            break;
+        case 'D':
+            keys[0xF] = true;
+            break;
+     }
  return true;
 }
 
