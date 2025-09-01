@@ -1,9 +1,14 @@
-# Chip8 Emulator on a STM32 Board
+# CHIP-8 Emulator on a STM32 Board
 
-This project is a chip8 emulator implemented on a STM32 microcontroller.
-It includes all the peripherals needed to play Chip-8 games.
+This project is a CHIP-8 emulator implemented on a STM32 microcontroller.
+It includes all the peripherals needed to play CHIP-8 games.
 
-### Hardware:
+### What is a CHIP-8 Emulator?
+Although this project is called a CHIP-8 emulator, the CHIP-8 is not actually a piece of hardware, but rather an interpreted programming language, virtual machine, and instruction set architecture created by RCA engineer Joe Weisbecker as a way to make programs and games for his computer. Therefore, it might be more accurate to call this project a *CHIP-8 interpreter*.
+
+For information on the specifications and instructions of the CHIP-8, see the documentation [here](http://devernay.free.fr/hacks/CHIP-8/C8TECH10.HTM#1.0).
+
+### Hardware Used:
 - STM32F4 Microcontroller
 - 4x4 Membrane Matrix Keypad
 - SSD1306 OLED display
@@ -12,8 +17,8 @@ Add your games to the `roms.h` header file. You can convert your games from bina
 
 ### How to run it
 - Download the STM32CubeIDE and open this project in the IDE
-- In the constructor of the Chip8 class (`Emulator/Chip8`), replace the rom array with the rom of your choice from the `roms.h` file
-- Connect the board to the computer and run it as a STM32 C/C++ application to flash it and you can play the game
+- In the constructor of the CHIP-8 class (`Emulator/CHIP-8`), replace the rom array with the rom of your choice from the `roms.h` file
+- Connect the board to the computer and run it as a STM32 C/C++ application to flash it and you can play the game. Once you have flashed it, you can play the game you want from anywhere by simpling connecting a power source to the microcontroller (battery or powerbank for example)
 
 ### Diagram of the setup
 ![alt text](image.png)
