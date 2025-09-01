@@ -1,7 +1,7 @@
 # CHIP-8 Emulator on a STM32 Board
 
-This project is a CHIP-8 emulator implemented on a STM32 microcontroller.
-It includes all the peripherals needed to play CHIP-8 games.
+This project is an extension of a previous [project](https://github.com/mahanmaalekian/chip8-emulator) where I implemented a CHIP-8 emulator, but now modified it to run on an STM32 microcontroller and integrated a keypad and display to transform it into a portable retro gaming console that you can take anywhere and play any CHIP-8 game on!
+It includes all the peripherals needed to play CHIP-8 games on the STM32 board.
 
 ### What is a CHIP-8 Emulator?
 Although this project is called a CHIP-8 emulator, the CHIP-8 is not actually a piece of hardware, but rather an interpreted programming language, virtual machine, and instruction set architecture created by RCA engineer Joe Weisbecker as a way to make programs and games for his computer. Therefore, it might be more accurate to call this project a *CHIP-8 interpreter*.
