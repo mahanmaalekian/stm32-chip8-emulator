@@ -22,3 +22,10 @@ Add your games to the `roms.h` header file. You can convert your games from bina
 
 ### Diagram of the setup
 ![alt text](image.png)
+
+### Real life setup
+<img width="400" height="1589" alt="image" src="https://github.com/user-attachments/assets/3ec26448-ef2f-4402-aec5-7b99870d7734" />
+
+
+### Game example: Tetris
+<img width="400" height="869" alt="image" src="https://github.com/user-attachments/assets/2bfc3fc0-002e-4d63-8144-28fd0bcb04e4" />
